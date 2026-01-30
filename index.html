@@ -204,6 +204,36 @@
       text-align: center;
     }
 
+    .name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.name-wrapper input {
+  flex: 1;
+}
+
+.submit-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background: #388e3c;
+}
+
+.saved-name {
+  font-weight: bold;
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+
     button {
       padding: 12px;
       font-size: 16px;
@@ -269,11 +299,13 @@
 
     <!-- CONTROLS -->
     <div class="controls">
-      <input
-        id="nameInput"
-        type="text"
-        placeholder="Enter a name"
-      />
+      <div class="name-wrapper" id="nameWrapper">
+  <input id="nameInput" type="text" placeholder="Enter a name" />
+  <button id="submitNameBtn" class="submit-btn">✓</button>
+</div>
+
+<div id="savedName" class="saved-name" style="display:none;"></div>
+
       <button class="slap-btn" id="slapBtn">Slap</button>
       <button class="reset-btn" id="resetBtn">Reset</button>
     </div>
@@ -287,6 +319,13 @@
     const MAX_SLAPS = 4;
     let slapCount = 0;
 
+
+    const submitNameBtn = document.getElementById("submitNameBtn");
+const nameWrapper = document.getElementById("nameWrapper");
+const savedName = document.getElementById("savedName");
+
+let storedName = "";
+
     const face = document.getElementById("face");
     const hand = document.getElementById("hand");
     const slapBtn = document.getElementById("slapBtn");
@@ -296,6 +335,20 @@
     /* =============================== 
        SLAP LOGIC 
        =============================== */
+
+
+
+       submitNameBtn.addEventListener("click", () => {
+  const value = nameInput.value.trim();
+  if (!value) return;
+
+  storedName = value;
+
+  nameWrapper.style.display = "none";
+  savedName.textContent = storedName;
+  savedName.style.display = "block";
+});
+
     slapBtn.addEventListener("click", () => {
       slapCount++;
 
@@ -328,6 +381,11 @@
       face.style.transform = "translateX(0)";
       nameInput.value = "";
       hand.classList.remove("animate");
+      storedName = "";
+savedName.style.display = "none";
+savedName.textContent = "";
+nameWrapper.style.display = "flex";
+
     });
   </script>
 
