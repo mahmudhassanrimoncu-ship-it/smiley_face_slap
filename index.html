@@ -77,6 +77,24 @@
       right: 70px;
     }
 
+    .text-green {
+  color: #2e7d32;
+}
+
+
+    .text-red {
+  color: #d32f2f;
+}
+
+.text-pale-blue {
+  color: #90caf9;
+}
+
+.text-dark {
+  color: #263238;
+}
+
+
     /* Crying eyes (smaller + tilted) */
     .face.crying .eye {
       width: 26px;
@@ -229,7 +247,7 @@
 
 .saved-name {
   font-weight: bold;
-  color: #2e7d32;
+ 
   margin-bottom: 8px;
 }
 
@@ -345,12 +363,42 @@ let storedName = "";
   storedName = value;
 
   nameWrapper.style.display = "none";
-  savedName.textContent = storedName;
+  savedName.textContent = `${storedName} * slapped 0 times`;
   savedName.style.display = "block";
+  savedName.classList.add("text-green");
+
 });
 
     slapBtn.addEventListener("click", () => {
       slapCount++;
+
+
+      if (storedName) {
+  savedName.textContent = `${storedName} * slapped ${slapCount} times`;
+
+  // reset color state
+  savedName.classList.remove("text-green", "text-red", "text-pale-blue", "text-dark");
+
+  // Decide color based on slapCount (custom variable)
+if (slapCount >= 15) {
+  // 15 and above → emotionally dead
+  savedName.classList.add("text-dark"); // custom class
+
+} else if (slapCount >= 9) {
+  // 9–14 → numb / pale blue
+  savedName.classList.add("text-pale-blue"); // custom class
+
+} else if (slapCount >= 3) {
+  // 3–8 → hurt / red
+  savedName.classList.add("text-red"); // custom class
+
+} else {
+  // 0–2 → normal
+  savedName.classList.add("text-green"); // custom class
+}
+}
+
+
 
       // Trigger hand animation
       hand.classList.remove("animate");
@@ -382,6 +430,9 @@ let storedName = "";
       nameInput.value = "";
       hand.classList.remove("animate");
       storedName = "";
+
+      savedName.classList.remove("text-red", "text-pale-blue", "text-dark");
+
 savedName.style.display = "none";
 savedName.textContent = "";
 nameWrapper.style.display = "flex";
