@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Smiley Slap Parody</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    /* =============================== 
+       GLOBAL RESET + BASE STYLES 
+       =============================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f4f6f9, #e9edf2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    /* =============================== 
+       FACE CONTAINER 
+       =============================== */
+    .face-wrapper {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      margin: 0 auto 24px;
+    }
+
+    .face {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #ffeb3b;
+      position: relative;
+      transition:
+        background-color 0.8s ease,
+        transform 0.3s ease;
+    }
+
+    /* Red crying state */
+    .face.crying {
+      background: #8d99ae;
+    }
+
+    /* =============================== 
+       EYES 
+       =============================== */
+    .eye {
+      width: 28px;
+      height: 28px;
+      background: #222;
+      border-radius: 50%;
+      position: absolute;
+      top: 80px;
+    }
+
+    .eye.left {
+      left: 70px;
+    }
+
+    .eye.right {
+      right: 70px;
+    }
+
+    /* Crying eyes (smaller + tilted) */
+    .face.crying .eye {
+      width: 26px;
+      height: 10px;
+      border-radius: 10px;
+      background: #222;
+      top: 90px;
+      transform: rotate(10deg);
+    }
+
+    .face.crying .eye.right {
+      transform: rotate(-10deg);
+    }
+
+    /* =============================== 
+       MOUTH 
+       =============================== */
+    .mouth {
+      position: absolute;
+      width: 120px;
+      height: 60px;
+      border-bottom: 8px solid #222;
+      border-radius: 0 0 120px 120px;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      transition: all 0.8s ease;
+    }
+
+    /* Crying mouth */
+    .face.crying .mouth {
+      border-bottom: none;
+      border-top: 8px solid #222;
+      border-radius: 120px 120px 0 0;
+      bottom: 80px;
+    }
+
+    /* =============================== 
+       TEARS 
+       =============================== */
+    .tear {
+      position: absolute;
+      width: 10px;
+      height: 24px;
+      background: #4fc3f7;
+      border-radius: 50%;
+      top: 110px;
+      opacity: 0;
+      animation: none;
+    }
+
+    .tear.left {
+      left: 76px;
+    }
+
+    .tear.right {
+      right: 76px;
+      animation-delay: 0.3s;
+    }
+
+    .face.crying .tear {
+      opacity: 1;
+      animation: tear-drop 1.2s infinite ease-in;
+    }
+
+    @keyframes tear-drop {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(25px);
+        opacity: 0;
+      }
+    }
+
+    /* =============================== 
+       HAND SLAP 
+       =============================== */
+    .hand {
+      position: absolute;
+      font-size: 72px;
+      right: -120px;
+      top: 90px;
+      opacity: 0;
+      transform: rotate(0deg);
+      pointer-events: none;
+    }
+
+    .hand.animate {
+      animation: slap 0.5s ease-out forwards;
+    }
+
+    @keyframes slap {
+      0% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      60% {
+        transform: translateX(-160px) rotate(-20deg);
+      }
+      100% {
+        transform: translateX(-160px) rotate(-20deg);
+        opacity: 0;
+      }
+    }
+
+    /* =============================== 
+       CONTROLS 
+       =============================== */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    input[type="text"] {
+      padding: 12px 14px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition:
+        transform 0.1s ease,
+        background-color 0.2s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
+    }
+
+    .slap-btn {
+      background: #ff7043;
+      color: #fff;
+    }
+
+    .slap-btn:hover {
+      background: #f4511e;
+    }
+
+    .reset-btn {
+      background: #607d8b;
+      color: #fff;
+    }
+
+    .reset-btn:hover {
+      background: #455a64;
+    }
+
+    /* =============================== 
+       RESPONSIVE 
+       =============================== */
+    @media (max-width: 480px) {
+      .face-wrapper {
+        width: 220px;
+        height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- FACE -->
+    <div class="face-wrapper">
+      <div class="face" id="face">
+        <div class="eye left"></div>
+        <div class="eye right"></div>
+        <div class="mouth"></div>
+
+        <div class="tear left"></div>
+        <div class="tear right"></div>
+      </div>
+
+      <!-- HAND -->
+      <div class="hand" id="hand">✋</div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <input
+        id="nameInput"
+        type="text"
+        placeholder="Enter a name"
+      />
+      <button class="slap-btn" id="slapBtn">Slap</button>
+      <button class="reset-btn" id="resetBtn">Reset</button>
+    </div>
+
+  </div>
+
+  <script>
+    /* =============================== 
+       STATE 
+       =============================== */
+    const MAX_SLAPS = 4;
+    let slapCount = 0;
+
+    const face = document.getElementById("face");
+    const hand = document.getElementById("hand");
+    const slapBtn = document.getElementById("slapBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const nameInput = document.getElementById("nameInput");
+
+    /* =============================== 
+       SLAP LOGIC 
+       =============================== */
+    slapBtn.addEventListener("click", () => {
+      slapCount++;
+
+      // Trigger hand animation
+      hand.classList.remove("animate");
+      void hand.offsetWidth; // force reflow
+      hand.classList.add("animate");
+
+      // Small face shake
+      face.style.transform = "translateX(-6px)";
+      setTimeout(() => {
+        face.style.transform = "translateX(6px)";
+      }, 80);
+      setTimeout(() => {
+        face.style.transform = "translateX(0)";
+      }, 160);
+
+      // Transform face after enough slaps
+      if (slapCount >= MAX_SLAPS) {
+        face.classList.add("crying");
+      }
+    });
+
+    /* =============================== 
+       RESET LOGIC 
+       =============================== */
+    resetBtn.addEventListener("click", () => {
+      slapCount = 0;
+      face.classList.remove("crying");
+      face.style.transform = "translateX(0)";
+      nameInput.value = "";
+      hand.classList.remove("animate");
+    });
+  </script>
+
+</body>
+</html>
